@@ -131,12 +131,40 @@ def get_resolution(video):
     return width, height
 
 
+def work_with_batches(ups, video, batch_frames):
+    counter = 1
+    batches = ceil(len(os.listdir('input_temp')) / batch_frames)
+    print('There is ' + str(batches) + ' batches')
+    while len(os.listdir('input_temp')) != 0:
+        print('Processing batch ' + str(counter) + '...')
+        get_frames_video(batch_frames)
+        ups.run()
+        get_video_from_frames(counter, batch_frames)
+        counter += 1
+    final_video = join_videos('output_temp', video)
+    return final_video
+
+
+def work_without_batches(ups, video):
+    batch_frames = len(os.listdir('input_temp'))
+    get_frames_video(batch_frames)
+    ups.run()
+    # Final video without sound
+    final_video = video.split('.')[0] + '_ESRGAN.mp4'
+    bash_command = 'ffmpeg -loglevel warning -r 30 ' \
+        + ' -i output/%04d.bmp -vcodec libx264 -crf 1 -pix_fmt yuv420p ' \
+        + final_video
+    run_bash(bash_command)
+    return final_video
+
+
 if __name__ == '__main__':
     video = argv[1]  #'big_apple_cut.mp4'
     try:
         model = argv[2]
     except IndexError:
         model = 'models/deindeo_x4.pth'
+    batches = False
     batch_frames = 30 * 5
 
     extract_all_frames(video)
@@ -147,19 +175,12 @@ if __name__ == '__main__':
                   fp16=False,
                   cache_max_split_depth=True)
 
-    if os.path.isdir('output_temp'):
-        shutil.rmtree('output_temp')
-    os.makedirs('output_temp')
+    if batches == True:
+        if os.path.isdir('output_temp'):
+            shutil.rmtree('output_temp')
+        os.makedirs('output_temp')
+        final_video = work_with_batches(ups, video, batch_frames)
+    else:
+        final_video = work_without_batches(ups, video)
 
-    counter = 1
-    batches = ceil(len(os.listdir('input_temp')) / batch_frames)
-    print('There is ' + str(batches) + ' batches')
-    while len(os.listdir('input_temp')) != 0:
-        print('Processing batch ' + str(counter) + '...')
-        get_frames_video(batch_frames)
-        ups.run()
-        get_video_from_frames(counter, batch_frames)
-        counter += 1
-
-    final_video = join_videos('output_temp', video)
     transfer_audio(video, final_video)
