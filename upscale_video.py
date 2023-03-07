@@ -55,7 +55,7 @@ def get_frames_video(last_frame: int = 5):
 def get_video_from_frames(counter, batch_frames):
     bash_command = 'ffmpeg -loglevel warning -r 30 -start_number ' \
         + str(counter * batch_frames) \
-        + ' -i output/%04d.bmp -vcodec libx265 -crf 1 -pix_fmt yuv420p output_temp/' \
+        + ' -i output/%04d.bmp -vcodec libx264 -crf 1 -pix_fmt yuv420p output_temp/' \
         + str(counter) +  '.mp4'
     run_bash(bash_command)
 
