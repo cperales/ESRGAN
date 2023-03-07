@@ -141,7 +141,7 @@ if __name__ == '__main__':
                   input=Path('input'),
                   output=Path('output'),
                   delete_input=True,
-                  fp16=True,
+                  fp16=False,
                   cache_max_split_depth=True)
 
     if os.path.isdir('output_temp'):

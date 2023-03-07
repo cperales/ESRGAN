@@ -44,3 +44,10 @@ Examples:
     - My GUI, has all these same features available plus more architecture support. Node based and very customizable. Multiplatform.
 - [Cupscale](https://github.com/n00mkrad/cupscale/).
     - Windows only. Implements this fork as well as other utilities around it.
+
+
+## Docker
+
+```bash
+docker run -it --rm --gpus all --privileged -v $(pwd):/repo esrgan:latest bash
+```
