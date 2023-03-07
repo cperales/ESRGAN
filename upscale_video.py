@@ -5,6 +5,8 @@ import subprocess
 import datetime
 from pathlib import Path
 from pymediainfo import MediaInfo
+from math import ceil
+from sys import argv
 
 
 def run_bash(bash_command: str):
@@ -130,9 +132,9 @@ def get_resolution(video):
 
 
 if __name__ == '__main__':
-    video = 'shim_sham.mp4'
+    video = argv[1]  #'big_apple_cut.mp4'
     model = 'models/deindeo_x4.pth'
-    batch_frames = 30 * 4
+    batch_frames = 30 * 3
 
     extract_all_frames(video)
     ups = Upscale(model=model,
@@ -146,7 +148,9 @@ if __name__ == '__main__':
         shutil.rmtree('output_temp')
     os.makedirs('output_temp')
 
-    counter = 0
+    counter = 1
+    batches = ceil(len(os.listdir('input_temp')) / batch_frames)
+    print('There is ' + str(batches) + ' batches')
     while len(os.listdir('input_temp')) != 0:
         print('Processing batch ' + str(counter) + '...')
         get_frames_video(batch_frames)

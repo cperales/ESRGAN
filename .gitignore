@@ -1,6 +1,8 @@
 # Files
 *.mp4
+*.png
 *.out
+*.prof
 
 # Folders
 input*/
@@ -151,3 +153,4 @@ cython_debug/
 input/**/*.*
 output/**/*.*
 .vscode/
+.idea/
