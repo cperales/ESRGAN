@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-base-ubuntu22.04
+FROM nvidia/cuda:11.7.1-base-ubuntu22.04
 
 # Environments
 ARG DEBIAN_FRONTEND=noninteractive
@@ -28,7 +28,7 @@ RUN python3 -m pip install -U --no-cache-dir pip && python3 -m \
 # RUN pip3 install tensorflow==2.0.0
 RUN python3 -m pip install -U --no-cache-dir pip && python3 -m \
     pip install --no-cache-dir \
-    install torch torchvision torchaudio
+    torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu117
 
 
 # Install library
