@@ -55,7 +55,7 @@ def get_frames_video(last_frame: int = 5):
 def get_video_from_frames(counter, batch_frames):
     bash_command = 'ffmpeg -loglevel warning -r 30 -start_number ' \
         + str(counter * batch_frames) \
-        + ' -i output/%04d.bmp -vcodec libx265 -crf 10 -pix_fmt yuv420p output_temp/' \
+        + ' -i output/%04d.bmp -vcodec libx265 -crf 1 -pix_fmt yuv420p output_temp/' \
         + str(counter) +  '.mp4'
     run_bash(bash_command)
 
@@ -68,7 +68,7 @@ def join_videos(folder='test', video='output.mp4'):
             w.write('file ' + os.path.join(folder, filename) + '\n')
     final_video = video.split('.')[0] + '_ESRGAN.mp4'
     command = 'ffmpeg -loglevel warning -f concat -safe 0 -i temp_file.txt ' \
-        + '-c copy -y -vcodec libx264 -crf 10 -pix_fmt yuv420p ' \
+        + '-c copy -y -vcodec libx264 -crf 15 -pix_fmt yuv420p ' \
         + final_video
     run_bash(command)
     os.remove('temp_file.txt')
@@ -133,8 +133,11 @@ def get_resolution(video):
 
 if __name__ == '__main__':
     video = argv[1]  #'big_apple_cut.mp4'
-    model = 'models/deindeo_x4.pth'
-    batch_frames = 30 * 3
+    try:
+        model = argv[2]
+    except IndexError:
+        model = 'models/deindeo_x4.pth'
+    batch_frames = 30 * 5
 
     extract_all_frames(video)
     ups = Upscale(model=model,
