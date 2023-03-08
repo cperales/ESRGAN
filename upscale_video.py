@@ -152,7 +152,7 @@ def work_without_batches(ups, video):
     # Final video without sound
     final_video = video.split('.')[0] + '_ESRGAN.mp4'
     bash_command = 'ffmpeg -loglevel warning -r 30 ' \
-        + ' -i output/%04d.bmp -vcodec libx264 -crf 1 -pix_fmt yuv420p ' \
+        + ' -i output/%04d.bmp -vcodec libx264 -crf 17 -pix_fmt yuv420p ' \
         + final_video
     run_bash(bash_command)
     return final_video
